@@ -10,7 +10,9 @@ free web endpoint — no API key). Reads the **primary selection**
 primary selection is empty. An empty selection just shows a "Nothing selected"
 notification instead of erroring.
 
-Built for Sway on EndeavourOS/Arch, with kitty as the terminal.
+Built for Sway on EndeavourOS/Arch. Defaults to kitty as the terminal and
+notify-send (mako) for notifications, but both are swappable — see [Swapping the
+terminal / notification tool](#swapping-the-terminal--notification-tool).
 
 ## Three modes
 
