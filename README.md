@@ -1,7 +1,9 @@
-# translator — selection → Czech, on a keybind (Sway/Wayland)
+# translator — selection → your language, on a keybind (Sway/Wayland)
 
-Highlight text anywhere, hit a keybind, get a Czech translation. Source
-language is auto-detected by Google Translate via
+Highlight text anywhere, hit a keybind, get a translation (Czech by default —
+configurable, see [Configuration](#configuration)). The source language is
+auto-detected by Google Translate by default, or can be pinned to a preset
+one. Translation is done via
 [translate-shell](https://github.com/soimort/translate-shell) (`trans -b`, the
 free web endpoint — no API key). Reads the **primary selection**
 (middle-click buffer) first and falls back to the regular clipboard if the
@@ -66,7 +68,7 @@ them manually. They must appear **after** `set $mod` is defined:
 exec mako
 # floating rule for the terminal-mode popup window
 for_window [app_id="trans-popup"] floating enable, resize set 800 400, move position center
-# notification mode: translate selection to Czech, click notification to copy
+# notification mode: translate selection (per translator.conf), click notification to copy
 bindsym $mod+t exec ~/.config/sway/translator/translate-notify.sh
 # terminal mode: floating kitty window with original + translation
 bindsym $mod+Shift+t exec ~/.config/sway/translator/translate-popup.sh
@@ -75,17 +77,33 @@ bindsym $mod+Shift+t exec ~/.config/sway/translator/translate-popup.sh
 
 Then reload Sway (`Super+Shift+R` → `1` on this setup, or `swaymsg reload`).
 
-## Changing the target language
+## Configuration
 
-Edit `TARGET_LANG="cs"` at the top of `translate-notify.sh` and
-`translate-view.sh` (any code `trans -list-codes` knows, e.g. `de`, `en`).
+Languages are configured in **`translator.conf`** (same directory as the
+scripts, sourced as shell by both modes via `load-config.sh`). The file is
+optional — without it the defaults below apply. Changes take effect on the
+next keypress, no reload needed.
+
+```sh
+TARGET_LANG="cs"    # language to translate into (any `trans -list-codes` code)
+AUTO_DETECT="on"    # "on" = Google detects the source; "off" = use SOURCE_LANG
+SOURCE_LANG=""      # source language, only used when AUTO_DETECT="off"
+```
+
+Setting `AUTO_DETECT="off"` while leaving `SOURCE_LANG` empty shows a warning
+notification and falls back to auto-detection. Full details and examples:
+[docs/CONFIG.md](docs/CONFIG.md).
 
 ## Troubleshooting
 
 - **No notification at all** → is mako running? `pgrep mako`; start with
   `swaymsg exec mako` or reload Sway.
 - **"Translation failed"** → no network, or Google rate-limited the free
-  endpoint; wait a bit. Test manually: `trans -b :cs "hello"`.
+  endpoint; wait a bit. Test manually: `trans -b :cs "hello"` (use your
+  configured `TARGET_LANG`).
+- **Wrong language detected / wrong direction** → check `translator.conf`:
+  either fix `TARGET_LANG`, or set `AUTO_DETECT="off"` with an explicit
+  `SOURCE_LANG` (see [docs/CONFIG.md](docs/CONFIG.md)).
 - **Popup window isn't floating** → the `for_window [app_id="trans-popup"]`
   rule is missing from the main Sway config (see above).
 - **Wrong text translated** → primary selection was empty, so the clipboard

@@ -3,7 +3,7 @@
 # Usage: translate-view.sh <file-with-original-text>
 set -u
 
-TARGET_LANG="cs"
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/load-config.sh"
 tmpfile="${1:?usage: translate-view.sh <textfile>}"
 text="$(cat "$tmpfile")"
 rm -f "$tmpfile"
@@ -15,11 +15,11 @@ printf '%sOriginal%s\n' "$bold" "$reset"
 hr
 printf '%s\n\n' "$text"
 
-printf '%sTranslation (→ %s)%s\n' "$bold" "$TARGET_LANG" "$reset"
+printf '%sTranslation (%s)%s\n' "$bold" "$TRANS_LABEL" "$reset"
 hr
 printf '%sTranslating…%s' "$dim" "$reset"
 
-translation="$(trans -b ":$TARGET_LANG" "$text" 2>/dev/null)"
+translation="$(trans -b "$TRANS_SPEC" "$text" 2>/dev/null)"
 printf '\r\033[K'   # erase the "Translating…" line
 
 if [ -z "$translation" ]; then

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Notification mode: translate the current selection to Czech and show the
-# result as a mako notification. Clicking the notification copies the
-# translation to the clipboard.
+# Notification mode: translate the current selection to the configured target
+# language (translator.conf) and show the result as a mako notification.
+# Clicking the notification copies the translation to the clipboard.
 set -u
 
-TARGET_LANG="cs"
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/load-config.sh"
 APP_NAME="translator"
 
 # Primary selection first, clipboard as fallback.
@@ -17,7 +17,7 @@ if [ -z "${text//[[:space:]]/}" ]; then
     exit 0
 fi
 
-translation="$(trans -b ":$TARGET_LANG" "$text" 2>/dev/null)"
+translation="$(trans -b "$TRANS_SPEC" "$text" 2>/dev/null)"
 if [ -z "$translation" ]; then
     notify-send -a "$APP_NAME" -u critical "Translator" \
         "Translation failed (no network, or rate-limited by Google)"
@@ -29,7 +29,7 @@ fi
 # prints its id ("default") to stdout.
 clicked="$(notify-send -a "$APP_NAME" -t 8000 \
     -A default="Copy translation" \
-    "→ $TARGET_LANG" "$translation")"
+    "$TRANS_LABEL" "$translation")"
 
 if [ "$clicked" = "default" ]; then
     printf '%s' "$translation" | wl-copy

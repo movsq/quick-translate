@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Terminal mode: grab the current selection and open a floating kitty window
 # (app_id trans-popup, floated by a for_window rule in the main Sway config)
-# showing the original text and its Czech translation.
+# showing the original text and its translation (languages per translator.conf).
 set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
