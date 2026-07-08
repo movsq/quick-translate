@@ -55,14 +55,22 @@ finish as terminal mode. Submitting an empty line just closes the window.
 
 ## Dependencies
 
+Hard dependencies (required):
+
 - `translate-shell` — the `trans` command
 - `wl-clipboard` — `wl-paste` / `wl-copy`
-- `kitty` — terminal for the popup mode
+
+Swappable (defaults below; see [Swapping the terminal / notification
+tool](#swapping-the-terminal--notification-tool)):
+
+- `kitty` — terminal for the popup/input modes. Override `open_terminal` in
+  `translator.conf` to use foot, alacritty, etc.
 - **`mako`** — notification daemon. On this machine neither mako nor dunst was
   installed when this was set up (2026-07-08), so **mako was installed**
-  (`pacman -S mako`) and is autostarted from the Sway config (see below). If
-  you switch to dunst, notification mode's click-to-copy must be rewritten
-  around `dunstify --action`.
+  (`pacman -S mako`) and is autostarted from the Sway config (see below). Its
+  `notify-send` interface is overridable via `NOTIFY`; both mako and dunst
+  ship a compatible `notify-send`, so click-to-copy keeps working on dunst
+  (via its `notify-send`, no `dunstify` rewrite needed).
 - `libnotify` ≥ 0.8 — `notify-send` with `--action` support
 
 ```sh
@@ -108,6 +116,26 @@ SOURCE_LANG="en"    # source language, only used when AUTO_DETECT="off"
 Setting `AUTO_DETECT="off"` while leaving `SOURCE_LANG` empty shows a warning
 notification and falls back to auto-detection. Full details and examples:
 [docs/CONFIG.md](docs/CONFIG.md).
+
+### Swapping the terminal / notification tool
+
+The terminal (kitty) and the notification command (`notify-send`) are the only
+two non-hard dependencies — everything else (`trans`, `wl-clipboard`) is
+required. Both are overridable in `translator.conf`; the defaults are kept if
+you leave it alone.
+
+```sh
+# notification command — must accept notify-send's flags (-a -u -t -A);
+# mako and dunst both provide a compatible notify-send.
+NOTIFY="notify-send"
+
+# terminal for the popup/input windows — a function so it can absorb each
+# terminal's flag differences. The window MUST get the app_id/class
+# "trans-popup" (so the Sway float rule matches) and run the command in "$@".
+open_terminal() { exec foot --app-id=trans-popup --title="Translator" "$@"; }
+# alacritty needs -e before the command:
+# open_terminal() { exec alacritty --class trans-popup --title "Translator" -e "$@"; }
+```
 
 ## Troubleshooting
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs INSIDE the kitty popup opened by translate-popup.sh.
+# Runs INSIDE the popup terminal opened by translate-popup.sh.
 # Usage: translate-view.sh <file-with-original-text>
 set -u
 

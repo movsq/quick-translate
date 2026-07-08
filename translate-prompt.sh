@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs INSIDE the kitty popup opened by translate-input.sh.
+# Runs INSIDE the popup terminal opened by translate-input.sh.
 # Prompts for text, translates it (languages per translator.conf), and offers
 # to copy the result — the input-mode counterpart of translate-view.sh.
 set -u

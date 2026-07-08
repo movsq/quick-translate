@@ -13,13 +13,13 @@ if [ -z "${text//[[:space:]]/}" ]; then
     text="$(wl-paste --no-newline 2>/dev/null)"
 fi
 if [ -z "${text//[[:space:]]/}" ]; then
-    notify-send -a "$APP_NAME" -u low -t 3000 "Translator" "Nothing selected"
+    "$NOTIFY" -a "$APP_NAME" -u low -t 3000 "Translator" "Nothing selected"
     exit 0
 fi
 
 translation="$(trans -b "$TRANS_SPEC" "$text" 2>/dev/null)"
 if [ -z "$translation" ]; then
-    notify-send -a "$APP_NAME" -u critical "Translator" \
+    "$NOTIFY" -a "$APP_NAME" -u critical "Translator" \
         "Translation failed (no network, or rate-limited by Google)"
     exit 1
 fi
@@ -27,11 +27,11 @@ fi
 # -A makes notify-send block until the notification is clicked, dismissed, or
 # expires; mako fires the "default" action on left-click and notify-send then
 # prints its id ("default") to stdout.
-clicked="$(notify-send -a "$APP_NAME" -t 8000 \
+clicked="$("$NOTIFY" -a "$APP_NAME" -t 8000 \
     -A default="Copy translation" \
     "$TRANS_LABEL" "$translation")"
 
 if [ "$clicked" = "default" ]; then
     printf '%s' "$translation" | wl-copy
-    notify-send -a "$APP_NAME" -u low -t 2000 "Translator" "Copied to clipboard"
+    "$NOTIFY" -a "$APP_NAME" -u low -t 2000 "Translator" "Copied to clipboard"
 fi
