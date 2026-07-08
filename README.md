@@ -137,6 +137,17 @@ open_terminal() { exec foot --app-id=trans-popup --title="Translator" "$@"; }
 # open_terminal() { exec alacritty --class trans-popup --title "Translator" -e "$@"; }
 ```
 
+## Known behavior
+
+- **Each translation takes about a second.** This is *not* a bug in the
+  scripts — `trans -b` sends the text to Google Translate's free web endpoint
+  over the network and waits for the reply, so every translation costs one
+  internet round-trip (typically ~0.5–1 s, more on a slow connection; repeat
+  translations of the same text come back near-instantly from Google's own
+  caching). There's nothing to speed up locally short of an offline engine,
+  which is an explicit non-goal — expect the brief pause, that's why the
+  terminal/input modes print a `Translating…` line while it works.
+
 ## Troubleshooting
 
 - **No notification at all** → is mako running? `pgrep mako`; start with
