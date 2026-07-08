@@ -134,7 +134,7 @@ NOTIFY="notify-send"
 # terminal for the popup/input windows — a function so it can absorb each
 # terminal's flag differences. The window MUST get the app_id/class
 # "trans-popup" (so the Sway float rule matches) and run the command in "$@".
-open_terminal() { exec foot --app-id=trans-popup --title="Translator" "$@"; }
+open_terminal() { exec kitty --class trans-popup --title "Translator" "$@"; }
 # alacritty needs -e before the command:
 # open_terminal() { exec alacritty --class trans-popup --title "Translator" -e "$@"; }
 ```
