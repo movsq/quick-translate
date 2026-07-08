@@ -17,8 +17,8 @@ Built for Sway on EndeavourOS/Arch, with kitty as the terminal.
 | Keybind | Mode | Script |
 |---|---|---|
 | `Super+T` | Notification popup, click it to copy | `translate-notify.sh` |
-| `Super+Shift+T` | Floating kitty window, stays open | `translate-popup.sh` |
-| `Super+Ctrl+T` | Empty floating window, type the text yourself | `translate-input.sh` |
+| `Super+Shift+T` | Empty floating window, type the text yourself | `translate-input.sh` |
+| `Super+Ctrl+T` | Floating kitty window, stays open | `translate-popup.sh` |
 
 ### Notification mode (`Super+T`) — quick single-word lookups
 
@@ -33,7 +33,7 @@ invoked action's id; mako fires the `default` action on left-click. This is
 daemon-specific — plain fire-and-forget `notify-send` can't capture clicks,
 and on dunst you'd use `dunstify --action` instead.
 
-### Terminal mode (`Super+Shift+T`) — longer text
+### Terminal mode (`Super+Ctrl+T`) — longer text
 
 `translate-popup.sh` grabs the selection, snapshots it to a temp file, and
 opens `kitty --class trans-popup` running `translate-view.sh`, which shows the
@@ -42,7 +42,7 @@ and stays open until you press a key: **`c` copies the translation** to the
 clipboard and closes, **`n` starts the next translation** (prompts you to type
 new text), any other key just closes the window.
 
-### Input mode (`Super+Ctrl+T`) — no selection, type it yourself
+### Input mode (`Super+Shift+T`) — no selection, type it yourself
 
 `translate-input.sh` opens the same floating kitty window (same `trans-popup`
 app_id, so the same Sway float rule), but **empty and waiting for you to type**
@@ -91,10 +91,10 @@ exec mako
 for_window [app_id="trans-popup"] floating enable, resize set 800 400, move position center
 # notification mode: translate selection (per translator.conf), click notification to copy
 bindsym $mod+t exec ~/.config/sway/translator/translate-notify.sh
-# terminal mode: floating kitty window with original + translation
-bindsym $mod+Shift+t exec ~/.config/sway/translator/translate-popup.sh
 # input mode: floating kitty window that waits for you to type the text
-bindsym $mod+Ctrl+t exec ~/.config/sway/translator/translate-input.sh
+bindsym $mod+Shift+t exec ~/.config/sway/translator/translate-input.sh
+# terminal mode: floating kitty window with original + translation
+bindsym $mod+Ctrl+t exec ~/.config/sway/translator/translate-popup.sh
 # ═══ TRANSLATOR — managed block, end ══════════════════════════════════
 ```
 
