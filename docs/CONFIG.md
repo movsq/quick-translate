@@ -12,7 +12,7 @@ take effect on the next keypress; nothing needs reloading.
 |---|---|---|
 | `TARGET_LANG` | `"cs"` | Language to translate **into**. |
 | `AUTO_DETECT` | `"on"` | `"on"`: Google auto-detects the source language. `"off"`: use `SOURCE_LANG`. |
-| `SOURCE_LANG` | `""` | Source language, used **only** when `AUTO_DETECT="off"`. |
+| `SOURCE_LANG` | `"en"` | Source language, used **only** when `AUTO_DETECT="off"`. |
 
 Language codes are anything `trans -list-codes` accepts (`cs`, `en`, `de`,
 `ja`, …).
@@ -24,7 +24,7 @@ Default behavior — auto-detect anything, translate to Czech:
 ```sh
 TARGET_LANG="cs"
 AUTO_DETECT="on"
-SOURCE_LANG=""
+SOURCE_LANG="en"
 ```
 
 Force English → German (useful when short words get misdetected):

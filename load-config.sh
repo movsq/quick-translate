@@ -7,7 +7,7 @@
 
 TARGET_LANG="cs"
 AUTO_DETECT="on"
-SOURCE_LANG=""
+SOURCE_LANG="en"
 
 _conf="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/translator.conf"
 [ -f "$_conf" ] && . "$_conf"
