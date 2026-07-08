@@ -39,7 +39,8 @@ and on dunst you'd use `dunstify --action` instead.
 opens `kitty --class trans-popup` running `translate-view.sh`, which shows the
 original text and the translation. The window floats (via the Sway rule below)
 and stays open until you press a key: **`c` copies the translation** to the
-clipboard, any other key just closes the window.
+clipboard and closes, **`n` starts the next translation** (prompts you to type
+new text), any other key just closes the window.
 
 ### Input mode (`Super+Ctrl+T`) — no selection, type it yourself
 
@@ -49,8 +50,8 @@ the text — it never touches the selection or clipboard. Use it when there's
 nothing highlighted, or when you want to translate something you're about to
 type rather than something already on screen. It runs `translate-prompt.sh`,
 which prompts for a line of text, translates it, and offers the same
-**`c` to copy** / any-other-key-to-close finish as terminal mode. Submitting an
-empty line just closes the window.
+**`c` to copy** / **`n` for the next translation** / any-other-key-to-close
+finish as terminal mode. Submitting an empty line just closes the window.
 
 ## Dependencies
 

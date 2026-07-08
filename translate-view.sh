@@ -11,27 +11,50 @@ rm -f "$tmpfile"
 bold=$(tput bold) dim=$(tput dim) reset=$(tput sgr0)
 hr() { printf '%s%s%s\n' "$dim" "────────────────────────────────────────" "$reset"; }
 
-printf '%sOriginal%s\n' "$bold" "$reset"
-hr
-printf '%s\n\n' "$text"
+# First pass shows the selection; pressing "n" loops back for typed input.
+first=1
+while true; do
+    if [ "$first" = 1 ]; then
+        first=0
+    else
+        clear
+        printf '%sText to translate (%s)%s\n' "$bold" "$TRANS_LABEL" "$reset"
+        hr
+        IFS= read -r text
+        if [ -z "${text//[[:space:]]/}" ]; then
+            break
+        fi
+    fi
 
-printf '%sTranslation (%s)%s\n' "$bold" "$TRANS_LABEL" "$reset"
-hr
-printf '%sTranslating…%s' "$dim" "$reset"
+    printf '%sOriginal%s\n' "$bold" "$reset"
+    hr
+    printf '%s\n\n' "$text"
 
-translation="$(trans -b "$TRANS_SPEC" "$text" 2>/dev/null)"
-printf '\r\033[K'   # erase the "Translating…" line
+    printf '%sTranslation (%s)%s\n' "$bold" "$TRANS_LABEL" "$reset"
+    hr
+    printf '%sTranslating…%s' "$dim" "$reset"
 
-if [ -z "$translation" ]; then
-    printf 'Translation failed (no network, or rate-limited by Google).\n'
-else
-    printf '%s\n' "$translation"
-fi
+    translation="$(trans -b "$TRANS_SPEC" "$text" 2>/dev/null)"
+    printf '\r\033[K'   # erase the "Translating…" line
 
-printf '\n%s[c] copy translation   [any other key] close%s\n' "$dim" "$reset"
-IFS= read -r -n1 -s key
-if [ "${key:-}" = "c" ] && [ -n "$translation" ]; then
-    printf '%s' "$translation" | wl-copy
-    printf 'Copied to clipboard.\n'
-    sleep 0.6
-fi
+    if [ -z "$translation" ]; then
+        printf 'Translation failed (no network, or rate-limited by Google).\n'
+    else
+        printf '%s\n' "$translation"
+    fi
+
+    printf '\n%s[c] copy   [n] next translation   [any other key] close%s\n' "$dim" "$reset"
+    IFS= read -r -n1 -s key
+    case "${key:-}" in
+        c)
+            if [ -n "$translation" ]; then
+                printf '%s' "$translation" | wl-copy
+                printf 'Copied to clipboard.\n'
+                sleep 0.6
+            fi
+            break
+            ;;
+        n) continue ;;
+        *) break ;;
+    esac
+done
