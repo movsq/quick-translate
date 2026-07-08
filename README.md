@@ -12,12 +12,13 @@ notification instead of erroring.
 
 Built for Sway on EndeavourOS/Arch, with kitty as the terminal.
 
-## Two modes
+## Three modes
 
 | Keybind | Mode | Script |
 |---|---|---|
 | `Super+T` | Notification popup, click it to copy | `translate-notify.sh` |
 | `Super+Shift+T` | Floating kitty window, stays open | `translate-popup.sh` |
+| `Super+Ctrl+T` | Empty floating window, type the text yourself | `translate-input.sh` |
 
 ### Notification mode (`Super+T`) — quick single-word lookups
 
@@ -39,6 +40,17 @@ opens `kitty --class trans-popup` running `translate-view.sh`, which shows the
 original text and the translation. The window floats (via the Sway rule below)
 and stays open until you press a key: **`c` copies the translation** to the
 clipboard, any other key just closes the window.
+
+### Input mode (`Super+Ctrl+T`) — no selection, type it yourself
+
+`translate-input.sh` opens the same floating kitty window (same `trans-popup`
+app_id, so the same Sway float rule), but **empty and waiting for you to type**
+the text — it never touches the selection or clipboard. Use it when there's
+nothing highlighted, or when you want to translate something you're about to
+type rather than something already on screen. It runs `translate-prompt.sh`,
+which prompts for a line of text, translates it, and offers the same
+**`c` to copy** / any-other-key-to-close finish as terminal mode. Submitting an
+empty line just closes the window.
 
 ## Dependencies
 
@@ -72,6 +84,8 @@ for_window [app_id="trans-popup"] floating enable, resize set 800 400, move posi
 bindsym $mod+t exec ~/.config/sway/translator/translate-notify.sh
 # terminal mode: floating kitty window with original + translation
 bindsym $mod+Shift+t exec ~/.config/sway/translator/translate-popup.sh
+# input mode: floating kitty window that waits for you to type the text
+bindsym $mod+Ctrl+t exec ~/.config/sway/translator/translate-input.sh
 # ═══ TRANSLATOR — managed block, end ══════════════════════════════════
 ```
 
@@ -87,7 +101,7 @@ next keypress, no reload needed.
 ```sh
 TARGET_LANG="cs"    # language to translate into (any `trans -list-codes` code)
 AUTO_DETECT="on"    # "on" = Google detects the source; "off" = use SOURCE_LANG
-SOURCE_LANG=""      # source language, only used when AUTO_DETECT="off"
+SOURCE_LANG="en"    # source language, only used when AUTO_DETECT="off"
 ```
 
 Setting `AUTO_DETECT="off"` while leaving `SOURCE_LANG` empty shows a warning
