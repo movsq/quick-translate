@@ -1,0 +1,8 @@
+# local planning artifacts — not part of the published repo
+docs/SPEC.md
+docs/PLAN.md
+
+# editor / stray temp files
+*~
+*.swp
+.DS_Store
